@@ -44,8 +44,8 @@
             </x-primary-button>
         </div>
         <div class="flex items-center justify-center mt-4">
-            <a href="{{ route('login.github') }}" class="underline text-sm text-gray-600 hover:text-gray-900">
-              Login With GitHub
+            <a href="{{ route('google-auth') }}" class="underline text-sm text-gray-600 hover:text-gray-900">
+              Login With google
             </a>
           </div>
     </form>

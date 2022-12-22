@@ -16,13 +16,15 @@ use App\Http\Controllers\ProfileController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/',[TaskController::class,'index'])->name('dashboard');
+Route::resource('/task',TaskController::class)->middleware('auth');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -30,10 +32,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/todolist', [TaskController::class, 'index'])->name('todolist.index');
-Route::post('/add', [TaskController::class, 'store'])->name('todolist.store');
+// Route::get('/todolist', [TaskController::class, 'index'])->name('todolist.index');
+// Route::post('/add', [TaskController::class, 'store'])->name('todolist.store');
 
-Route::get('auth/github', [SocialController::class, 'githubRedirect'])->name('login.github');
-Route::get('auth/github/callback', [SocialController::class, 'githubCallback']);
+// Route::get('auth/github', [SocialController::class, 'githubRedirect'])->name('login.github');
+
+
+
+
+Route::get('google-auth',[SocialController::class,'redirect'])->name('google-auth');
+Route::get('auth/callback/google', [SocialController::class, 'callbackGoogle']);
 
 require __DIR__.'/auth.php';

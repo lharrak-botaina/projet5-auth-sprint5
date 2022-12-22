@@ -10,24 +10,36 @@ use Laravel\Socialite\Facades\Socialite;
 
 class SocialController extends Controller
 {
-    public function githubRedirect(){
-        return Socialite::driver('github')->redirect();
+    public function redirect(){
+        return Socialite::driver('google')->redirect();
     }
-    public function githubCallback(){
-        $user=Socialite::driver('github')->stateless()->user();
-        $this->_registerOrLoginGitHubUser($user);
-        return redirect()->route('dashboard');
+
+
+
+
+
+    public function callbackGoogle(){
+  
+            $google_user=Socialite::driver('google')->user();
+            // $this->_registerOrLoginGitHubUser($user);
+            $user =User::where('google_id',$google_user->getId())->first();
+            if(!$user){
+                $add_user=User::create([
+                    'name'=>$google_user->getName(),
+                    'email'=>$google_user->getEmail(),
+                    'google_id'=>$google_user->getId(),
+                    'password'=>bcrypt('password'), 
+                ]);
+                Auth::login($add_user);
+                return redirect('/');
+            }else{
+                Auth::login($user);
+                return redirect('/');
+            }
+    
+        
+
+
     }
-    protected function _registerOrLoginGitHubUser($incomingUser){
-        $user =User::where('github_id',$incomingUser->id)->first();
-        if(!$user){
-            $user =new User();
-            $user->name=$incomingUser->nickname;
-            $user->name=$incomingUser->email;
-            $user->github_id=$incomingUser->id;
-            $user->password=encrypt('password');
-            $user->save();
-        }
-        Auth::login($user);
-    }
+   
 }
